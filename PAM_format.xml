@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<BCPFORMAT xmlns="http://schemas.microsoft.com/sqlserver/2004/bulkload/format" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <RECORD>
+  <FIELD ID="1" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="5"/>
+  <FIELD ID="2" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="3" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="4" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="5" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="6" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="7" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="8" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="9" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="10" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="11" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="12" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="13" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="14" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="15" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="16" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="17" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="18" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="19" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="20" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="21" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="22" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="23" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="24" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="25" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="26" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="27" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="28" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="29" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="30" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="31" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="32" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="33" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="34" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="35" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="36" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="37" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="38" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="39" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="40" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="41" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="42" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="43" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="44" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="45" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="46" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="47" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="48" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="49" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="10"/>
+  <FIELD ID="50" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="15"/>
+  <FIELD ID="51" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="15"/>
+  <FIELD ID="52" xsi:type="CharTerm" TERMINATOR="," MAX_LENGTH="15"/>
+  <FIELD ID="53" xsi:type="CharTerm" TERMINATOR="\n" MAX_LENGTH="15"/>
+</RECORD>
+ <ROW>
+  <COLUMN SOURCE="1"   NAME="FreqID" xsi:type="SQLINT"/>
+  <COLUMN SOURCE="2"   NAME="CWUP_month01" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="3"   NAME="CWUP_month02" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="4"   NAME="CWUP_month03" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="5"   NAME="CWUP_month04" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="6"   NAME="CWUP_month05" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="7"   NAME="CWUP_month06" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="8"   NAME="CWUP_month07" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="9"   NAME="CWUP_month08" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="10"  NAME="CWUP_month09" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="11"  NAME="CWUP_month10" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="12"  NAME="CWUP_month11" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="13"  NAME="CWUP_month12" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="14"  NAME="CWUP_month13" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="15"  NAME="CWUP_month14" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="16"  NAME="CWUP_month15" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="17"  NAME="CWUP_month16" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="18"  NAME="CWUP_month17" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="19"  NAME="CWUP_month18" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="20"  NAME="CWUP_month19" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="21"  NAME="CWUP_month20" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="22"  NAME="CWUP_month21" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="23"  NAME="CWUP_month22" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="24"  NAME="CWUP_month23" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="25"  NAME="CWUP_month24" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="26"  NAME="SCH_month01" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="27"  NAME="SCH_month02" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="28"  NAME="SCH_month03" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="29"  NAME="SCH_month04" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="30"  NAME="SCH_month05" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="31"  NAME="SCH_month06" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="32"  NAME="SCH_month07" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="33"  NAME="SCH_month08" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="34"  NAME="SCH_month09" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="35"  NAME="SCH_month10" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="36"  NAME="SCH_month11" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="37"  NAME="SCH_month12" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="38"  NAME="SCH_month13" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="39"  NAME="SCH_month14" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="40"  NAME="SCH_month15" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="41"  NAME="SCH_month16" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="42"  NAME="SCH_month17" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="43"  NAME="SCH_month18" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="44"  NAME="SCH_month19" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="45"  NAME="SCH_month20" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="46"  NAME="SCH_month21" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="47"  NAME="SCH_month22" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="48"  NAME="SCH_month23" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="49"  NAME="SCH_month24" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="50"  NAME="Obj_budget_diff" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="51"  NAME="Obj_gw_prod_over" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="52"  NAME="Obj_gw_prod_under" xsi:type="SQLFLT4"/>
+  <COLUMN SOURCE="53"  NAME="Obj_prodcost_avg" xsi:type="SQLFLT4"/>
+ </ROW>
+</BCPFORMAT>

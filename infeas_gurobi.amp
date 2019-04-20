@@ -1,0 +1,12 @@
+# Dump infeasibility
+printf "\nList of variables in the Irriducible Infeasible Subset (IIS):\n";
+printf "%25s%12s%12s%12s%12s%8s\n",
+	"Variable Name","Slack","LBound","Value","UBound","IIS";
+printf {i in {1.._nvars}: _var[i].iis_num>0}: "%25s%12.5f%12.5f%12.5f%12.5f%8s\n",
+	_varname[i],_var[i].slack,_var[i].lb,_var[i],_var[i].ub,_var[i].iis;
+
+printf "\nList of violated constraints:\n";
+printf "%25s%12s%12s%12s%12s%8s\n",
+"Constraint Name","Slack","LBound","Value","UBound","IIS";
+printf {i in {1.._ncons}: _con[i].iis_num>0}: "%25s%12.5f%12.5f%12.5f%12.5f%8s\n",
+	_conname[i],_con[i].slack,_con[i].lb,_con[i].body,_con[i].ub,_con[i].iis;

@@ -1,0 +1,218 @@
+########################################
+# Production Allocation Model - Model file
+# Adapted from Prodcution Allocation Excel Spreadsheet
+########################################
+
+model;
+
+#--------------------------------------------------
+# Define problem parameters and set
+set wpda ordered;
+set monyr ordered;
+param demand{wpda,monyr};
+
+set timesteps ordered := {1..card(monyr)};
+param nyears integer default card(monyr)/12;
+param ndays_mo{timesteps} integer default 30;
+param yearno{timesteps} integer default 1; # index to year number
+param monthno{timesteps} integer; # index to month number
+
+set years ordered := {1..nyears};
+param dem_annual{wpda,years};
+param dem_total{years};
+
+param ch_poc{timesteps} default 11.0;
+param reg_lithia{timesteps} default 4.0;
+param reg_cot{timesteps} default 0;
+param reg_thic{timesteps} default 0.83;
+param crw_prod{timesteps} default 0;
+param eag_prod{timesteps} default 0;
+# if need to fix the follow production
+param bud_fix{timesteps} default 6.0;
+param ds_fix{timesteps} default 8.0;
+set budget_set ordered;
+param budget_target{budget_set,{1..12}} default 0;
+
+set gw_sources ordered := {'CWUP', 'BUD', 'SCH'};
+param wup_12mavg {gw_sources};
+param ppp_sum12{gw_sources, i in {1..11}}; # previous 11 month production
+
+set nongw ordered := {'TBC', 'Alafia'};
+param ngw_avail{nongw, timesteps} default 0.0; # repeat for nyears start in Jan
+param avail_pctile default 50;
+param max_resvol default 15.5;
+param res_init default max_resvol;
+
+#--------------------------------------------------
+# Decision Variables
+var gw_prod{gw_sources,timesteps};
+var ds_prod{timesteps} >= 0 <= 16;
+var swtp_prod{timesteps} >= 0 <= 90;
+var reg_demand{timesteps};
+var tbw_delivery{timesteps};
+
+# over and under wup compliance
+var prod_12mavg{gw_sources,timesteps} >= 0;
+var gw_over{gw_sources,timesteps} >= 0;
+var gw_under{gw_sources,timesteps} >= 0;
+# over anmd under production preferred range
+param prod_range_lo{gw_sources} >= 0;
+param prod_range_hi{gw_sources} >= 0;
+var gw_prod_over{gw_sources,timesteps} >= 0;
+var gw_prod_under{gw_sources,timesteps} >= 0;
+var prodcost_avg{(gw_sources union nongw union {'Reservoir'}), k in years};
+
+var sw_withdraw{nongw,timesteps} >= 0;
+#var tbc_swtp{timesteps} >= 0 <= 90.0;
+#var tbc_res{timesteps} >= 0 <= 137.0;
+#var alf_swtp{timesteps} >= 0 <= 52.0;
+#var alf_res{timesteps} >= 0 <= 52.0;
+
+var to_swtp{nongw,timesteps} >= 0;
+var to_res{nongw,timesteps} >= 0;
+var res_inf{timesteps} >= 0 <= 212.0;
+var res_eff{timesteps} >= 0 <= 100.0;
+var res_vol{({0} union timesteps)} >= 0 <= max_resvol;
+var res_vol_lo{1..nyears} >= 0;
+var res_vol_hi{1..nyears} >= 0;
+
+#--------------------------------------------------
+# Cost or preferential score
+param relcost{(gw_sources union nongw union {'Reservoir'})};
+
+# WUP violation cost and penalty cost of under utilization
+param violcost default 1e3;
+# piece-wise penalty function, specify limit (x) and rate (r)
+param penfunc_x{(gw_sources union nongw union {'Reservoir'}), {1..5}};
+param penfunc_r{(gw_sources union nongw union {'Reservoir'}), {1..5}};
+# Set uu_penalty as DV, in case if we need to optimize in AMPL
+var uu_avg{(gw_sources union nongw union {'Reservoir'}), years};
+var uu_penalty{(gw_sources union nongw union {'Reservoir'}), years};
+
+var pos_budget_diff{budget_set,{1..12}} >= 0;
+var neg_budget_diff{budget_set,{1..12}} >= 0;
+var total_budget_diff{budget_set} >= 0;
+
+# Initial reservoir volumn - need data to define fix - move to python code
+# fix res_vol[0] := res_init;
+
+var pos_slack{gw_sources,timesteps} >= 0;
+var neg_slack{gw_sources,timesteps} >= 0;
+
+param borg_obj{k in {'prodcost_avg','budget_diff','gw_prod_under','gw_prod_over'}};
+#--------------------------------------------------
+# Constraints - Groundwater
+GW_PROD_LB{j in gw_sources, i in timesteps}:
+	gw_prod[j,i] >= prod_range_lo[j] - gw_prod_under[j,i];
+		
+GW_PROD_UB{j in gw_sources, i in timesteps}:
+	gw_prod[j,i] <= prod_range_hi[j] + gw_prod_over[j,i];
+
+SCH_PROD{i in timesteps}:
+	gw_prod['SCH',i] = demand['SCH',member(i,monyr)] - ch_poc[i] - reg_lithia[i] - gw_prod['BUD',i]
+		- pos_slack['SCH',i] + neg_slack['SCH',i];
+	
+ROW_29{i in timesteps}:
+	reg_demand[i] = sum {j in (wpda diff {'SCH','COT'})} demand[j,member(i,monyr)] + reg_lithia[i] + reg_cot[i] + ch_poc[i];
+	
+ROW_33{i in timesteps}:
+	tbw_delivery[i] = reg_demand[i] + gw_prod['BUD',i] + gw_prod['SCH',i];
+
+CWUP_PROD{i in timesteps}:
+	gw_prod['CWUP',i] = reg_demand[i] - ds_prod[i] - reg_thic[i] - swtp_prod[i] - crw_prod[i] - eag_prod[i]
+		- pos_slack['CWUP',i] + neg_slack['CWUP',i];
+
+GW_MAVG{j in gw_sources, i in timesteps}: # compute 12 month moving average
+	prod_12mavg[j,i] =
+		if i>=12 then sum {k in {0..11}} gw_prod[j,i-k]/12.0
+		else (sum {k in {1..11}: k >= i} ppp_sum12[j,k] + sum {k in {1..11}: k <= i} gw_prod[j,k])/12.0;
+
+WUP_MAVG{j in gw_sources, i in timesteps}: # limit mavg to WUP
+	gw_under[j,i] - gw_over[j,i] = wup_12mavg[j] - prod_12mavg[j,i];
+
+#--------------------------------------------------
+# Constraints - Surface water
+SW_AVAIL{j in nongw, i in timesteps}:
+	sw_withdraw[j,i] <= ngw_avail[j,i];
+
+SW_WITHDRAW{j in nongw, i in timesteps}:
+	sw_withdraw[j,i] = to_swtp[j,i] + to_res[j,i];
+#		if match(j,'TBC') then tbc_swtp[i] + tbc_res[i]
+#		else alf_swtp[i] + alf_res[i];
+
+SWTP{i in timesteps}:
+	swtp_prod[i] = to_swtp['TBC',i] + to_swtp['Alafia',i] + res_eff[i];
+
+RES_INF{i in timesteps}:
+	res_inf[i] = to_res['TBC',i] + to_res['Alafia',i];
+
+RES_VOL{i in timesteps}: # in billion gallons
+	res_vol[i] = (res_inf[i] - res_eff[i])*ndays_mo[i]*1e-3 + res_vol[i-1];
+
+#--------------------------------------------------
+# test concept
+#TBC_SWTP{i in timesteps}:
+#	tbc_swtp[i] = to_swtp['TBC',i];
+#TBC_RES{i in timesteps}:
+#	tbc_res[i] = to_res['TBC',i];
+#ALF_SWTP{i in timesteps}:
+#	alf_swtp[i] = to_swtp['Alafia',i];
+#ALF_RES{i in timesteps}:
+#	alf_res[i] = to_res['Alafia',i];
+#--------------------------------------------------
+
+#RESVOL_AVG_LO{k in years}:
+#	sum {i in timesteps: yearno[i]==k} res_vol[i]/12.0 >= 6.0 - res_vol_lo[k];
+#
+#RESVOL_AVG_HI{k in years}:
+#	sum {i in timesteps: yearno[i]==k} res_vol[i]/12.0 <= 8.0 + res_vol_hi[k];
+	
+#--------------------------------------------------
+# Production Cost and Under utilization - production cost per 1000 gallon
+PRODCOST_AVG{j in (gw_sources union nongw union {'Reservoir'}), k in years}:
+	prodcost_avg[j,k] =
+		if j in gw_sources then
+			sum {i in timesteps: yearno[i]==k} (gw_prod[j,i]*relcost[j]*1e3)/12.0
+		else if j in nongw then
+			sum {i in timesteps: yearno[i]==k} (to_swtp[j,i]*relcost[j]*1e3)/12.0
+		else
+			sum {i in timesteps: yearno[i]==k} (res_eff[i]*relcost[j]*1e3)/12.0
+		;
+	
+UU_AVG{j in (gw_sources union nongw union {'Reservoir'}), k in years}:
+	uu_avg[j,k] = 
+		if j in gw_sources then
+			sum {i in timesteps: yearno[i]==k} (wup_12mavg[j] - prod_12mavg[j,i])/12.0
+		else if j in nongw then
+			sum {i in timesteps: yearno[i]==k} (ngw_avail[j,i] - sw_withdraw[j,i])/12.0
+		else # reservoir avail = avg rate that available in the next 365 day from the storage over 4BG
+			sum {i in timesteps: yearno[i]==k} ((res_vol[i]- 4.0)*1e3/365.25 - res_eff[i])/12
+		;
+
+# piece-wise linear, imply rate zero at 0 limit and maintain same previous rate on the last piece
+UU_PENALTY{j in (gw_sources union nongw union {'Reservoir'}), k in years}:
+	uu_penalty[j,k] =
+		<< {p in {1..3}} penfunc_x[j,p];
+			 {p in {1..4}} penfunc_r[j,p] >> uu_avg[j,k];
+
+# compute budget_target - allocation
+BUDGET_DIFF{j in budget_set, i in {1..12}}:
+	pos_budget_diff[j,i] - neg_budget_diff[j,i] = 
+		if j='BUDSCH' then budget_target[j,i] - gw_prod['BUD',i] + gw_prod['SCH',i]
+		else if j='RESERVOIR' then budget_target[j,i] - res_vol[i]
+		else budget_target[j,i] - gw_prod['CWUP',i]
+		;
+BUDGET_DIFF_TOTAL{j in budget_set}:
+	total_budget_diff[j] = sum {i in {1..12}} (pos_budget_diff[j,i] + neg_budget_diff[j,i]);
+
+#--------------------------------------------------
+# MIP Objective -- scale relcost by 1e-3
+minimize mip_obj:
+	sum {j in ({'CWUP','SCH'} union nongw union {'Reservoir'}), k in years} prodcost_avg[j,k]*1e-3
+	+ sum {j in {'CWUP','SCH'}, i in timesteps} gw_over[j,i]*violcost
+	+ sum {j in {'CWUP','SCH'}, i in timesteps} (gw_prod_over[j,i] + gw_prod_under[j,i])*violcost/10
+	- sum {k in years} res_vol[k*12]
+#	+ sum {j in nongw, k in years} uu_avg[j,k]
+#	+ sum {k in years} (res_vol_lo[k] + res_vol_hi[k])*violcost/10
+	+ sum {j in {'CWUP','SCH'}, i in timesteps} (pos_slack[j,i] + neg_slack[j,i])*1e3
+	;

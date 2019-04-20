@@ -1,0 +1,26 @@
+########################################
+# Production Allocation Model - Run Script
+########################################
+
+# set options
+#option solver cbc;
+option solver gurobi_ampl;
+option gurobi_options 'iisfind=1 iismethod=1 lpmethod=4 mipgap=1e-6 warmstart=1'; 
+option ampl_include "F:\ProdAllocation\
+.\";
+
+# include
+include model.amp;
+include data.amp;
+solve;
+
+# Decision Variables
+display gw_prod;
+display to_swtp;
+display to_res;
+display res_eff;
+
+# Objective
+display prodcost_avg;
+display gw_prod_under;
+display gw_prod_over;
