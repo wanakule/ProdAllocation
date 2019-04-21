@@ -80,10 +80,11 @@ drivestoredirect:s:
     $f_rdp
 	
     # spawn mstsc process and get system process
-    #mstsc "$f_rdp" -v:$server
+    C:\Windows\System32\mstsc.exe "$f_rdp" -v:$server
 
-    #sleep -Seconds 15
-    #Remove-Item -Path $f_rdp -Force
+    sleep -Seconds 15
+    Remove-Item -Path $f_rdp -Force
+    $f_rdp
 }
 
 # Start script
@@ -112,7 +113,7 @@ $slist |%{
     sleep -Seconds 1
     $f_rdp = Invoke-Command -ComputerName . -ScriptBlock $sb0 `
         -ArgumentList $s,$nreal,$nseed,$moffset,$nfe,$freq,$utest,$ml_noexit,$PWD,$sid
-    C:\Windows\System32\mstsc $f_rdp /v:$s
+    # C:\Windows\System32\mstsc $f_rdp /v:$s
 }
 
 
@@ -121,7 +122,7 @@ $sb2 = {
     param($s,$cred)
     $temp = $true
     $CookedValue = 100
-    while (($CookedValue -gt 90) -and ($temp -ne $null)) {
+    while (($CookedValue -gt 90) -and ($temp.Length -gt 0)) {
         sleep -Seconds 3
         $CookedValue = Invoke-Command -ComputerName "$s.vgrid.net" -ScriptBlock {
             (Get-Counter '\Processor(_total)\% Processor Time' -SampleInterval 1 -MaxSamples 1 `
